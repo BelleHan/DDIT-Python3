@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<title>Insert title here</title>
+<script type="text/javascript">
+
+function init(){
+	var a = 3;
+	var arr = [3];
+	console.log(a);
+	console.log(arr);
+	
+	changeValue(a);
+	changeRef(arr);
+	
+	console.log(a);
+	console.log(arr);
+	
+}
+
+function changeValue(a){
+	a = 5;
+}
+function changeRef(arr){
+	arr[0] = 5;
+}
+
+</script>
+
+</head>
+<body>
+<a href="javascript:init()">go</a>
+</body>
+</html>

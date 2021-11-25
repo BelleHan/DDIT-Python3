@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<table border="1">
+	<tr>
+		<td>사번</td>
+		<td>이름</td>
+		<td>전화번호</td>
+	</tr>
+{% for i in vos %}
+	<tr>
+		<td>{{i.e_id}}</td>
+		<td>{{i.name}}</td>
+		<td>{{i.tel}}</td>
+	</tr>
+{% endfor %}
+
+</table>
+</body>
+</html>

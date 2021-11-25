@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<script type="application/javascript">
+
+	function init(){
+		
+   		var data = '0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,16,16,0,0,0,0,0,0,0,0,0,16,0,0,0,0,0,0,0,0,0,16,13,0,0,0,0,0,0,0,0,13,13,0,0,0,0,0,0,0,0,13,0,0,0,0,0,0,0,0,11,11,0,0,0,0,0,0,0,0,11,11,0,0,0,0,0,0,0';
+		var canvas = document.getElementById("canvas");
+		draw(data,canvas);
+	
+	}
+   
+  
+    function draw(data,canvas) {
+    	
+       
+       var arr = data.split(","); 
+       
+       var canvas = document.getElementById("canvas");
+       if (canvas.getContext) {
+          var ctx = canvas.getContext("2d");
+
+         for(var i=0; i<25; i++){
+            for(var j=0; j<10; j++){
+               if(arr[i*10+j]==0){
+                  ctx.fillStyle = "rgb(200,200,200)";
+               }
+               if(arr[i*10+j]==1){
+                  ctx.fillStyle = "rgb(255,0,0)";
+               }
+               if(arr[i*10+j]==2){
+                  ctx.fillStyle = "rgb(245,0,0)";
+               }
+               if(arr[i*10+j]==3){
+                  ctx.fillStyle = "rgb(235,0,0)";
+               }
+               if(arr[i*10+j]==4){
+                  ctx.fillStyle = "rgb(225,0,0)";
+               }
+               if(arr[i*10+j]==5){
+                  ctx.fillStyle = "rgb(215,0,0)";
+               }
+               if(arr[i*10+j]==6){
+                  ctx.fillStyle = "rgb(205,0,0)";
+               }
+               if(arr[i*10+j]==7){
+                  ctx.fillStyle = "rgb(195,0,0)";
+               }
+               
+               
+               if(arr[i*10+j]==11){
+                  ctx.fillStyle = "rgb(0,255,0)";
+               }
+               if(arr[i*10+j]==12){
+                  ctx.fillStyle = "rgb(0,245,0)";
+               }
+               if(arr[i*10+j]==13){
+                  ctx.fillStyle = "rgb(0,235,0)";
+               }
+               if(arr[i*10+j]==14){
+                  ctx.fillStyle = "rgb(0,225,0)";
+               }
+               if(arr[i*10+j]==15){
+                  ctx.fillStyle = "rgb(0,215,0)";
+               }
+               if(arr[i*10+j]==16){
+                  ctx.fillStyle = "rgb(0,205,0)";
+               }
+               if(arr[i*10+j]==17){
+                  ctx.fillStyle = "rgb(0,195,0)";
+               }
+                 ctx.fillRect (j*3, i*3, 2, 2);
+            }
+         }
+         
+         
+      }
+    }
+  
+</script>
+</head>
+<body onload="init();">
+   <canvas id="canvas" width="100px" height="250px"></canvas>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<script type="application/javascript">
+   
+    function draw() {
+       var data = ""
+       
+       data+="0,0,0,0,0,0,0,0,0,0,";
+       data+="0,0,1,1,0,0,0,0,0,0,";
+       data+="0,0,1,1,0,0,0,0,0,0";
+       
+       var arr = data.split(","); 
+       
+       var canvas = document.getElementById("canvas");
+       if (canvas.getContext) {
+          var ctx = canvas.getContext("2d");
+//            ctx.fillStyle = "rgb(200,0,0)";
+//            ctx.fillRect (0, 0, 50, 50);
+   
+         for(var i=0; i<3; i++){
+            for(var j=0; j<10; j++){
+               if(arr[i*10+j]==0){
+                  ctx.fillStyle = "rgb(200,200,200)";
+               }
+               if(arr[i*10+j]==1){
+                  ctx.fillStyle = "rgb(255,0,0)";
+               }
+                 ctx.fillRect (j*10, i*10, 9, 9);
+            }
+         }
+      }
+    }
+  
+</script>
+</head>
+<body onload="draw();">
+   <canvas id="canvas" width="400px" height="400px"></canvas>
+</body>
+</html>

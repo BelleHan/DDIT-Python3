@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="js/jquery-3.6.0.js"></script>
+<script type="text/javascript">
+function setData(e_id,name,tel){
+	var obj_e_id = document.getElementById("e_id");
+	var obj_name = document.getElementById("name");
+	var obj_tel = document.getElementById("tel");
+	obj_e_id.value = e_id;
+	obj_name.value = name;
+	obj_tel.value = tel;
+}
+
+function fn_add(){
+	
+	var obj_e_id 	= document.getElementById("e_id");
+	var obj_name 	= document.getElementById("name");
+	var obj_tel 	= document.getElementById("tel");
+	var e_id 	= obj_e_id.value;
+	var name 	= obj_name.value;
+	var tel 	= obj_tel.value;
+
+     var postdata = {
+         'e_id':e_id, 'name':name, 'tel':tel
+     }
+     $.ajax({
+         type: 'POST',
+         url: 'insert.ajax',
+         data: JSON.stringify(postdata),
+         dataType : 'JSON',
+         contentType: "application/json",
+         success: function(data){
+        	 if(data.result == "ok") {
+        	 location.reload();
+        	 } else {
+        		 alert("추가 도중 문제가 생겼습니다.")
+        	 }
+         },
+         error: function(request, status, error){
+             alert('ajax 통신 실패:'+error)
+         }
+     })
+}
+
+function fn_mod(){
+	
+	var e_id 	= $("#e_id").val();
+	var name 	= $("#name").val();
+	var tel 	= $("#tel").val();
+
+     var postdata = {
+         'e_id':e_id, 'name':name, 'tel':tel
+     }
+     $.ajax({
+         type: 'POST',
+         url: 'update.ajax',
+         data: JSON.stringify(postdata),
+         dataType : 'JSON',
+         contentType: "application/json",
+         success: function(data){
+        	 if(data.result == "ok") {
+        	 location.reload();
+        	 } else {
+        		 alert("수정 도중 문제가 생겼습니다.")
+        	 }
+         },
+         error: function(request, status, error){
+             alert('ajax 통신 실패:'+error)
+         }
+     })
+}
+
+
+function fn_del(){
+	
+	var flag = confirm( "한번 지워진 데이터는 복구할 수 없습니다.\n 진짜 지우시겠습니까?");
+	if(!flag){
+		return;
+	}
+	
+	var e_id 	= $("#e_id").val();
+
+     var postdata = {
+         'e_id':e_id
+     }
+     $.ajax({
+         type: 'POST',
+         url: 'delete.ajax',
+         data: JSON.stringify(postdata),
+         dataType : 'JSON',
+         contentType: "application/json",
+         success: function(data){
+        	 if(data.result == "ok") {
+        	 location.reload();
+        	 } else {
+        		 alert("삭제 도중 문제가 생겼습니다.")
+        	 }
+         },
+         error: function(request, status, error){
+             alert('ajax 통신 실패:'+error)
+         }
+     })
+}
+
+
+</script>
+</head>
+<body>
+<table>
+	<tr>
+		<td>사번</td>
+		<td>이름</td>
+		<td>전화번호</td>
+	</tr>
+{% for i in emps %}
+	<tr>
+		<td><a href="javascript:setData('{{i.e_id}}','{{i.name}}','{{i.tel}}')">{{i.e_id}}</a></td>
+		<td>{{i.name}}</td>
+		<td>{{i.tel}}</td>
+	</tr>
+{% endfor %}
+
+</table>
+
+<table>
+	<tr>
+		<td>사번</td>
+		<td>
+			<input type="text" id="e_id">
+		</td>
+	</tr>
+	<tr>
+		<td>이름</td>
+		<td>
+			<input type="text" id="name">
+		</td>
+	</tr>
+	<tr>
+		<td>전화번호</td>
+		<td>
+			<input type="text" id="tel">
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<input type="button" value="추가" onclick="fn_add()" />
+			<input type="button" value="수정" onclick="fn_mod()" />
+			<input type="button" value="삭제" onclick="fn_del()" />
+		</td>
+	</tr>
+</table>
+</body>
+</html>

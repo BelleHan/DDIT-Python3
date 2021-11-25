@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<title>Insert title here</title>
+<script type="text/javascript">
+window.addEventListener("keydown", (e) => {
+	console.log(e)
+	var flower = document.getElementById("mydiv");
+	var str_top = flower.style.top;
+	var int_top = parseInt(str_top.replace("px",""));
+	var str_left = flower.style.left;
+	var int_left = parseInt(str_left.replace("px",""));
+	
+	if(e.key == "ArrowUp"){
+		int_top -= 10;
+		flower.style.top = int_top+"px";
+	}
+	if(e.key == "ArrowDown"){
+		int_top += 10;
+		flower.style.top = int_top+"px";
+	}
+	if(e.key == "ArrowRight"){
+		int_left += 10;
+		flower.style.left = int_left+"px";
+	}
+	if(e.key == "ArrowLeft"){
+		int_left -= 10;
+		flower.style.left = int_left+"px";
+	}
+	
+});
+
+
+</script>
+
+</head>
+<body>
+<div class="mydiv" id="mydiv" style="position: absolute;left: 10px;top: 10px; width: 100px;height: 100px; background-color: red">움</div>
+
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<title>Insert title here</title>
+<script type="text/javascript">
+
+function init(){
+	var arr = [0,1,2,3,1,2,3];
+	var anew = [];
+	console.log(arr);
+	
+	var cnt3 = 0;
+	for(var i=0;i<arr.length;i++){
+		if(arr[i]!=3){
+			anew.push(arr[i]);
+		}else{
+			cnt3++;
+		}
+	}
+	for(var i=0;i<cnt3;i++){
+		anew.unshift(0);
+	}
+	
+	console.log(anew);
+	
+	for(var i = 0; i < arr.length; i++) {
+		  if(arr[i] == 3)  {
+		    arr.splice(i, 1);
+		    arr.unshift(0);
+		  }else{
+			  cnt3++;
+		  }
+	}
+	
+	console.log(arr);	  
+
+}
+
+</script>
+
+</head>
+<body>
+<a href="javascript:init()">go</a>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Flask_Chatting_Application</title>
+	<script src="js/jquery-3.5.1.js"></script>
+	<script src="js/socket.io.js"></script>
+	<script type="text/javascript">
+		var socket = null;
+		$(document).ready(function() {
+			socket = io.connect('http://192.168.45.29:9999');
+			socket.on('connect', function() {
+				$("#div_con").html("on");
+			})
+			socket.on('to_client', function(json) {
+				var name = json.name;
+				var mymsg = json.mymsg;
+				
+				var txt_old = $("#div_chat").html();
+				var text = "["+name+"]:"+mymsg+"<br/>"+txt_old;
+				
+				$("#div_chat").html(text);
+				
+
+			})
+		});
+
+		
+		function fn_send(){
+			var myname = $("#myname").val();
+			var mymsg = $("#mymsg").val();
+			socket.emit('to_server', {
+				name : myname,
+				mymsg : mymsg
+			});
+		}
+	</script>
+</head>
+<body>
+	커넥션:<div id="div_con"></div><br>
+	이름:<input id="myname" type="text" ><br>
+	메세지:<input id="mymsg" type="text" ><br>
+	<a href="javascript:fn_send()" >send</a><br>
+	<div id="div_chat"></div>
+	
+	
+	
+	
+	
+	
+	
+
+</body>
+</html>

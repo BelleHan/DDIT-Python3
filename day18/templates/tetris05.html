@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<title>Insert title here</title>
+<script src="js/jquery-3.5.1.js"></script>
+<script src="js/socket.io.js"></script>
+<script type="text/javascript">
+   var users = [];
+   var flag_ing = false;
+   var block2D = [
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+                            
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+                            
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+                            
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0]
+   ];
+   
+   var stack2D = [
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+                            
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+                            
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+                            
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+                            
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0]
+   ];
+   
+   var scrin2D = [
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+                            
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+                            
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+                            
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+                            
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0],
+      [0,0,0,0,0, 0,0,0,0,0]
+   ];
+   
+   class Block {
+        constructor(type,status,i,j) {
+          this.type = type;
+          this.status = status;
+          this.i = i;
+          this.j = j;
+        }
+   
+   }
+   
+   var b = new Block(parseInt(Math.random()*7)+1,1,2,4);
+   
+   function setBlock2DFromClass(){
+      
+      for(var i=0; i<block2D.length; i++) {
+         for(var j=0; j<block2D[j].length; j++) {
+            if(block2D[i][j]>0) {
+               block2D[i][j] = 0;
+            }
+         }
+      }
+      
+      if(b.type == 1){
+         block2D[b.i      ][b.j   ]=b.type;
+         block2D[b.i      ][b.j+1   ]=b.type;
+         block2D[b.i+1   ][b.j   ]=b.type;
+         block2D[b.i+1   ][b.j+1   ]=b.type;
+      }
+      
+      if(b.type == 2){
+         if(b.status == 1){
+            block2D[b.i-1   ][b.j   ]=b.type;
+            block2D[b.i      ][b.j   ]=b.type;
+            block2D[b.i      ][b.j+1   ]=b.type;
+            block2D[b.i+1   ][b.j+1   ]=b.type;
+         }   
+         if(b.status == 2){
+            block2D[b.i      ][b.j   ]=b.type;
+            block2D[b.i      ][b.j+1   ]=b.type;
+            block2D[b.i+1   ][b.j-1   ]=b.type;
+            block2D[b.i+1   ][b.j   ]=b.type;
+         }   
+      }
+      
+      if(b.type == 3){
+         if(b.status == 1){
+            block2D[b.i-1   ][b.j+1   ]=b.type;
+            block2D[b.i      ][b.j   ]=b.type;
+            block2D[b.i      ][b.j+1   ]=b.type;
+            block2D[b.i+1   ][b.j   ]=b.type;
+         }   
+         if(b.status == 2){
+            block2D[b.i      ][b.j-1   ]=b.type;
+            block2D[b.i      ][b.j   ]=b.type;
+            block2D[b.i+1   ][b.j   ]=b.type;
+            block2D[b.i+1   ][b.j+1   ]=b.type;
+         }   
+      }
+      
+      if(b.type == 4){
+         if(b.status == 1){
+            block2D[b.i      ][b.j-1   ]=b.type;
+            block2D[b.i      ][b.j   ]=b.type;
+            block2D[b.i      ][b.j+1   ]=b.type;
+            block2D[b.i      ][b.j+2   ]=b.type;
+         }   
+         if(b.status == 2){
+            block2D[b.i-1   ][b.j   ]=b.type;
+            block2D[b.i      ][b.j   ]=b.type;
+            block2D[b.i+1   ][b.j   ]=b.type;
+            block2D[b.i+2   ][b.j   ]=b.type;
+         }   
+      }
+      
+      if(b.type == 5){
+         if(b.status == 1){
+            block2D[b.i-1   ][b.j   ]=b.type;
+            block2D[b.i-1   ][b.j+1   ]=b.type;
+            block2D[b.i      ][b.j   ]=b.type;
+            block2D[b.i+1   ][b.j   ]=b.type;
+         }   
+         if(b.status == 2){
+            block2D[b.i      ][b.j-1   ]=b.type;
+            block2D[b.i      ][b.j   ]=b.type;
+            block2D[b.i      ][b.j+1   ]=b.type;
+            block2D[b.i+1   ][b.j+1   ]=b.type;
+         }   
+         if(b.status == 3){
+            block2D[b.i-1   ][b.j   ]=b.type;
+            block2D[b.i      ][b.j   ]=b.type;
+            block2D[b.i+1   ][b.j   ]=b.type;
+            block2D[b.i+1   ][b.j-1   ]=b.type;
+         }   
+         if(b.status == 4){
+            block2D[b.i-1   ][b.j-1   ]=b.type;
+            block2D[b.i      ][b.j-1   ]=b.type;
+            block2D[b.i      ][b.j   ]=b.type;
+            block2D[b.i      ][b.j+1   ]=b.type;
+         }   
+      }
+      
+      if(b.type == 6){
+         if(b.status == 1){
+            block2D[b.i-1   ][b.j-1   ]=b.type;
+            block2D[b.i-1   ][b.j   ]=b.type;
+            block2D[b.i      ][b.j   ]=b.type;
+            block2D[b.i+1   ][b.j   ]=b.type;
+         }   
+         if(b.status == 2){
+            block2D[b.i-1   ][b.j+1   ]=b.type;
+            block2D[b.i      ][b.j-1   ]=b.type;
+            block2D[b.i      ][b.j   ]=b.type;
+            block2D[b.i      ][b.j+1   ]=b.type;
+         }   
+         if(b.status == 3){
+            block2D[b.i-1   ][b.j   ]=b.type;
+            block2D[b.i      ][b.j   ]=b.type;
+            block2D[b.i+1   ][b.j   ]=b.type;
+            block2D[b.i+1   ][b.j+1   ]=b.type;
+         }   
+         if(b.status == 4){
+            block2D[b.i      ][b.j-1   ]=b.type;
+            block2D[b.i      ][b.j   ]=b.type;
+            block2D[b.i      ][b.j+1   ]=b.type;
+            block2D[b.i+1   ][b.j-1   ]=b.type;
+         }   
+      }
+      
+      if(b.type == 7){
+         if(b.status == 1){
+            block2D[b.i-1   ][b.j   ]=b.type;
+            block2D[b.i      ][b.j-1   ]=b.type;
+            block2D[b.i      ][b.j   ]=b.type;
+            block2D[b.i      ][b.j+1   ]=b.type;
+         }   
+         if(b.status == 2){
+            block2D[b.i-1   ][b.j   ]=b.type;
+            block2D[b.i      ][b.j   ]=b.type;
+            block2D[b.i      ][b.j+1   ]=b.type;
+            block2D[b.i+1   ][b.j   ]=b.type;
+         }   
+         if(b.status == 3){
+            block2D[b.i      ][b.j-1   ]=b.type;
+            block2D[b.i      ][b.j   ]=b.type;
+            block2D[b.i      ][b.j+1   ]=b.type;
+            block2D[b.i+1   ][b.j   ]=b.type;
+         }   
+         if(b.status == 4){
+            block2D[b.i-1   ][b.j   ]=b.type;
+            block2D[b.i      ][b.j-1   ]=b.type;
+            block2D[b.i      ][b.j   ]=b.type;
+            block2D[b.i+1   ][b.j   ]=b.type;
+         }   
+      }
+      
+   }
+   
+   function moveBlock2DToScrin2D() {
+      for(var i=0; i<block2D.length; i++) {
+         for(var j=0; j<block2D[i].length; j++) {
+            if(block2D[i][j]>0){
+               scrin2D[i][j] = block2D[i][j];
+            }
+         }
+      }
+   }
+   
+   function moveStack2DToScrin2D() {
+      for(var i=0; i<stack2D.length; i++) {
+         for(var j=0; j<stack2D[i].length; j++) {
+            if(stack2D[i][j]>0) {
+               scrin2D[i][j] = stack2D[i][j];
+            }
+         }
+      }
+   }
+   
+   function myrender() {
+      var tds = document.getElementsByClassName("mt");
+      
+      for(var i=0; i<scrin2D.length; i++) {
+         for(var j=0; j<scrin2D[i].length; j++) {
+            if(scrin2D[i][j] == 0) {
+               tds[i*10+j].bgColor = "#ffffff";
+            }
+            
+            if(scrin2D[i][j] == 1) {
+               tds[i*10+j].bgColor = "#ff0000";
+            }
+            if(scrin2D[i][j] == 2) {
+               tds[i*10+j].bgColor = "#dd0000";
+            }
+            if(scrin2D[i][j] == 3) {
+               tds[i*10+j].bgColor = "#bb0000";
+            }
+            if(scrin2D[i][j] == 4) {
+               tds[i*10+j].bgColor = "#990000";
+            }
+            if(scrin2D[i][j] == 5) {
+               tds[i*10+j].bgColor = "#770000";
+            }
+            if(scrin2D[i][j] == 6) {
+               tds[i*10+j].bgColor = "#550000";
+            }
+            if(scrin2D[i][j] == 7) {
+               tds[i*10+j].bgColor = "#330000";
+            }
+            
+            if(scrin2D[i][j] == 11) {
+               tds[i*10+j].bgColor = "#00ff00";
+            }
+            if(scrin2D[i][j] == 12) {
+               tds[i*10+j].bgColor = "#00dd00";
+            }
+            if(scrin2D[i][j] == 13) {
+               tds[i*10+j].bgColor = "#00bb00";
+            }
+            if(scrin2D[i][j] == 14) {
+               tds[i*10+j].bgColor = "#009900";
+            }
+            if(scrin2D[i][j] == 15) {
+               tds[i*10+j].bgColor = "#007700";
+            }
+            if(scrin2D[i][j] == 16) {
+               tds[i*10+j].bgColor = "#005500";
+            }
+            if(scrin2D[i][j] == 17) {
+               tds[i*10+j].bgColor = "#003300";
+            }
+            
+   
+         }
+      }
+      
+   }
+   
+   function makeScrin2DZero() {
+      for(var i=0; i<scrin2D.length; i++) {
+         for(var j=0; j<scrin2D[j].length; j++) {
+               scrin2D[i][j] = 0;
+         }
+      }
+   }
+   
+   function changeStatus() {
+      if (b.type == 2 || b.type == 3 || b.type == 4) {
+         if (b.status == 1) {
+            b.status = 2;
+         }else if (b.status == 2){
+            b.status = 1;
+         }
+      }
+      if (b.type == 5 || b.type == 6 || b.type == 7) {
+         if (b.status == 4) {
+            b.status = 1;
+         }else {
+            b.status++;
+         }
+      }
+   }
+   
+   function isCollision(){
+      
+      var cnt = 0;
+      for(var i=0; i<25; i++) {
+         for(var j=0; j<10; j++) {
+            if(block2D[i][j]>0) {
+               cnt ++;
+            }
+         }
+      }
+      console.log("cnt:"+cnt);
+      if(cnt<4){
+         return true;
+      }
+      
+      for(var i=0; i<block2D.length; i++) {
+         for(var j=0; j<block2D[i].length; j++) {
+            if(block2D[i][j]>0 && stack2D[i][j]>0) {
+               return true;
+            }
+         }
+      }
+         
+      return false;
+   }
+   
+   function stackBlock(){
+      for(var i=0; i<block2D.length; i++){
+         for(var j=0; j<block2D[i].length; j++) {
+            if(block2D[i][j]>0){
+               stack2D[i][j] = block2D[i][j]+10;
+            }
+         }
+      }
+   }
+   
+   function getCount10(){
+      var cnt = 0;
+      for(var i=0; i<stack2D.length; i++) {
+         if(   stack2D[i][0]>0 && 
+            stack2D[i][1]>0 && 
+            stack2D[i][2]>0 && 
+            stack2D[i][3]>0 && 
+            stack2D[i][4]>0 && 
+            
+            stack2D[i][5]>0 && 
+            stack2D[i][6]>0 && 
+            stack2D[i][7]>0 && 
+            stack2D[i][8]>0 && 
+            stack2D[i][9]>0){
+            cnt++;
+         }
+      }
+      return cnt;
+   }
+   
+   function remove10Stack(){
+      var anew = [];
+
+      var cnt10 = 0;
+
+      for(var i=0; i<stack2D.length; i++){
+         if(stack2D[i][0]>0 &&
+            stack2D[i][1]>0 &&
+            stack2D[i][2]>0 &&
+            stack2D[i][3]>0 &&
+            stack2D[i][4]>0 &&
+            stack2D[i][5]>0 &&
+            stack2D[i][6]>0 &&
+            stack2D[i][7]>0 &&
+            stack2D[i][8]>0 &&
+            stack2D[i][9]>0 
+         ){
+            cnt10++;
+         }else{
+            anew.push(stack2D[i]+"");
+         }
+      }
+      
+      for(var i=0; i<cnt10; i++){
+         anew.unshift("0,0,0,0,0,0,0,0,0,0");
+      }
+      
+      console.log(anew);
+      
+      for(var i=0; i<anew.length; i++){
+         for(var j=0; j<anew[i].length; j++){
+            var temp = anew[i];
+            var arr10 = temp.split(",");
+            stack2D[i][0] = parseInt(arr10[0]);
+            stack2D[i][1] = parseInt(arr10[1]);
+            stack2D[i][2] = parseInt(arr10[2]);
+            stack2D[i][3] = parseInt(arr10[3]);
+            stack2D[i][4] = parseInt(arr10[4]);
+            
+            stack2D[i][5] = parseInt(arr10[5]);
+            stack2D[i][6] = parseInt(arr10[6]);
+            stack2D[i][7] = parseInt(arr10[7]);
+            stack2D[i][8] = parseInt(arr10[8]);
+            stack2D[i][9] = parseInt(arr10[9]);
+            
+         }
+      }
+      
+      
+//       var anew = [];
+//       var cnt = getCount10();
+      
+//       console.log(stack2D);
+      
+//       if(cnt>0){
+//          for(var i=0; i<stack2D.length-cnt; i++){
+//             anew.push(stack2D[i]);
+//          }
+         
+//          for(var i=0; i<cnt; i++){
+//             anew.unshift([0,0,0,0,0, 0,0,0,0,0]);
+//          }
+         
+//          console.log(anew);
+         
+//          for(var i=0; i<stack2D.length; i++){
+//             for(var j=0; j<stack2D[i].length; j++){
+//                stack2D[i][j] = anew[i][j];
+//             }
+//          }
+         
+//          console.log(stack2D);
+//       }
+      
+      
+   }
+   function isFull(){
+      if(stack2D[6][0]>0 ||
+         stack2D[6][1]>0 ||      
+         stack2D[6][2]>0 ||      
+         stack2D[6][3]>0 ||      
+         stack2D[6][4]>0 ||      
+         stack2D[6][5]>0 ||      
+         stack2D[6][6]>0 ||      
+         stack2D[6][7]>0 ||      
+         stack2D[6][8]>0 ||      
+         stack2D[6][9]>0   ){
+         
+        return true;
+      }
+      return false;
+   }
+   
+   function mydown(key) {
+      if(!flag_ing){
+         return;
+      }
+      var bak_type    = b.type;
+      var bak_status  = b.status;
+      var bak_i       = b.i;
+      var bak_j       = b.j;
+      
+      var flag_down = false;
+      if(key == "ArrowUp") {
+         changeStatus();
+      }
+      if(key == "ArrowDown") {
+         b.i++;
+         flag_down = true;
+      }
+      if(key == "ArrowRight") {
+         b.j++;
+      }
+      if(key == "ArrowLeft") {
+         b.j--;
+      }
+      
+      try {
+         setBlock2DFromClass();
+      } catch (error) {
+         console.error("占쏙옙占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙");
+      }
+      
+      var flag_collision = isCollision();
+      
+      if(flag_collision){
+         b.type       = bak_type;
+         b.status    = bak_status;
+         b.i       = bak_i;    
+         b.j       = bak_j;   
+         setBlock2DFromClass();
+         if(flag_down){
+            stackBlock();
+            
+            var cnt10 = getCount10();
+            if(cnt10>0){
+               remove10Stack();
+               var obj_disp = document.getElementById("mydisplay");
+               var str_cnt = obj_disp.innerHTML;
+               var int_cnt = parseInt(str_cnt);
+               var total = int_cnt - cnt10;
+               
+               obj_disp.innerHTML = total;
+               
+               if(total<=0){
+                  fn_win();
+               }
+               
+               console.log(str_cnt);
+               
+            }
+            
+            b.type       = parseInt(Math.random()*7)+1;
+//             b.type       = 1;
+            b.status    = 1;
+            b.i       = 2;
+            b.j       = 2;
+            setBlock2DFromClass();
+         }
+
+      }
+      
+      makeScrin2DZero();
+      moveBlock2DToScrin2D();
+      moveStack2DToScrin2D();
+      
+      
+      myrender();
+      
+      fn_scrin();
+      var flag_full = isFull();
+      if(flag_full){
+         alert("you lose");
+         flag_ing = false;
+      }
+      
+//       console.log(block2D);
+//       console.log(scrin2D);
+      
+   }
+   
+   function fn_scrin(){
+      var myname = $("#myname").val();
+      
+      socket.emit('to_server', {
+         name : myname,
+         command : 'myscrin',
+         msg : scrin2D+""
+      });
+   }
+   //received my event: {'name': '      ', 'command': 'myscrin', 'msg': '0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0'}
+   function fn_ready(){
+      var myname = $("#myname").val();
+      if(myname.length != 3){
+         alert("정확한 이름을 기입하세요");
+         $("#myname").focus();
+         return;
+      }
+      
+      socket.emit('to_server', {
+         name : myname,
+         command : 'ready',
+         msg : scrin2D+""
+      });
+   }
+   
+   function fn_start(){
+      var myname = $("#myname").val();
+      
+      socket.emit('to_server', {
+         name : myname,
+         command : 'start',
+         msg : scrin2D+""
+      });
+   }
+   
+   function fn_win(){
+      var myname = $("#myname").val();
+      
+      socket.emit('to_server', {
+         name : myname,
+         command : 'win',
+         msg : scrin2D+""
+      });
+   }
+   
+   
+   function draw(data,canvas) {
+
+      var arr = data.split(","); 
+      
+      if (canvas.getContext) {
+         var ctx = canvas.getContext("2d");
+
+        for(var i=0; i<25; i++){
+           for(var j=0; j<10; j++){
+              if(arr[i*10+j]==0){
+                 ctx.fillStyle = "rgb(200,200,200)";
+              }
+              if(arr[i*10+j]==1){
+                 ctx.fillStyle = "rgb(255,0,0)";
+              }
+              if(arr[i*10+j]==2){
+                 ctx.fillStyle = "rgb(245,0,0)";
+              }
+              if(arr[i*10+j]==3){
+                 ctx.fillStyle = "rgb(235,0,0)";
+              }
+              if(arr[i*10+j]==4){
+                 ctx.fillStyle = "rgb(225,0,0)";
+              }
+              if(arr[i*10+j]==5){
+                 ctx.fillStyle = "rgb(215,0,0)";
+              }
+              if(arr[i*10+j]==6){
+                 ctx.fillStyle = "rgb(205,0,0)";
+              }
+              if(arr[i*10+j]==7){
+                 ctx.fillStyle = "rgb(195,0,0)";
+              }
+              
+              
+              if(arr[i*10+j]==11){
+                 ctx.fillStyle = "rgb(0,255,0)";
+              }
+              if(arr[i*10+j]==12){
+                 ctx.fillStyle = "rgb(0,245,0)";
+              }
+              if(arr[i*10+j]==13){
+                 ctx.fillStyle = "rgb(0,235,0)";
+              }
+              if(arr[i*10+j]==14){
+                 ctx.fillStyle = "rgb(0,225,0)";
+              }
+              if(arr[i*10+j]==15){
+                 ctx.fillStyle = "rgb(0,215,0)";
+              }
+              if(arr[i*10+j]==16){
+                 ctx.fillStyle = "rgb(0,205,0)";
+              }
+              if(arr[i*10+j]==17){
+                 ctx.fillStyle = "rgb(0,195,0)";
+              }
+                ctx.fillRect (j*15, i*6, 14, 5);
+           }
+        }
+        
+        
+     }
+   }
+   
+   var socket = null;
+   $(document).ready(function() {
+      socket = io.connect('http://192.168.45.29:9999');
+      socket.on('connect', function() {
+         $("#div_con").html("on");
+      })
+      socket.on('to_client', function(json) {
+         var name = json.name;
+         var command = json.command;
+         var msg = json.msg;
+         
+         if(command=="start"){
+            flag_ing = true;
+         }
+         
+         if(command=="win"){
+            alert(name+"님에 의해서 코로나 바이러스 역병을 극뽁!");
+            flag_ing = false;
+         }
+         
+         if(command=="ready"){
+            var idx = -1;
+            for(var i=0; i<users.length; i++){
+               if(name == users[i]){
+                  idx = i;
+                  break;
+               }
+            }
+            if(idx == -1){
+               users.push(name);
+               var divs = document.getElementsByClassName("div_users");
+               for(var i=0; i<users.length; i++){
+                  divs[i].innerHTML=users[i];
+               }
+            }
+
+         }
+         
+         if(command=="myscrin"){
+        	 var idx = -1;
+             for(var i=0; i<users.length; i++){
+                if(name == users[i]){
+                   idx = i;
+                   break;
+                }
+             }
+             
+             var canvas = document.getElementsByClassName("can_users")[idx];
+             draw(msg,canvas);
+        	 
+         }
+         
+         console.log("from_server");
+         console.log("name:"+name);
+         console.log("command:"+command);
+         console.log("msg:"+msg);
+         
+      })
+   });
+
+   
+   window.addEventListener("keydown", (e) => {
+      mydown(e.key);
+      
+   });
+   
+</script>
+<style type="text/css">
+.maintable{
+   border : 0px;
+   margin : 0px;
+   padding : 0px;
+}
+.maintable tr{
+   border : 0px;
+   margin : 0px;
+   padding : 0px;
+}
+.maintable td{
+   width : 10px;
+   height : 10px;
+}
+.div_users{
+   height:10px;
+}
+.can_users{
+   width:100px;
+   height:150px;
+}
+.mt{
+	width:"10px";
+	height:"10px"; 
+}
+
+</style>
+</head>
+<body>
+
+<table border="1px">
+<tr>
+   <td>
+<table class="maintable" border="1px">
+
+   <tr> <td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /> </tr>
+   <tr> <td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /> </tr>
+   <tr> <td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /> </tr>
+   <tr> <td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /> </tr>
+   <tr> <td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /> </tr>
+
+   <tr> <td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /> </tr>
+   <tr> <td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /> </tr>
+   <tr> <td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /> </tr>
+   <tr> <td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /> </tr>
+   <tr> <td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /> </tr>
+
+   <tr> <td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /> </tr>
+   <tr> <td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /> </tr>
+   <tr> <td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /> </tr>
+   <tr> <td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /> </tr>
+   <tr> <td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /> </tr>
+
+   <tr> <td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /> </tr>
+   <tr> <td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /> </tr>
+   <tr> <td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /> </tr>
+   <tr> <td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /> </tr>
+   <tr> <td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /> </tr>
+
+   <tr> <td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /> </tr>
+   <tr> <td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /> </tr>
+   <tr> <td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /> </tr>
+   <tr> <td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /> </tr>
+   <tr> <td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /><td class="mt" /> </tr>
+   
+</table>
+connect:<div id="div_con"></div>
+점수:<div id="mydisplay">10</div><br/>
+name: <input type="text" id="myname" ><br/>
+<a href="javascript:fn_ready()">ready</a><br/>
+<a href="javascript:fn_start()">start</a><br/>
+   
+   </td>
+   
+   <td>
+
+<table border="1px">
+   <tr>
+      <td><div class="div_users"></div></td>
+      <td><div class="div_users"></div></td>
+      <td><div class="div_users"></div></td>
+      <td><div class="div_users"></div></td>
+      <td><div class="div_users"></div></td>
+      <td><div class="div_users"></div></td>
+   </tr>
+   <tr>
+      <td><canvas class="can_users"></canvas></td>
+      <td><canvas class="can_users"></canvas></td>
+      <td><canvas class="can_users"></canvas></td>
+      <td><canvas class="can_users"></canvas></td>
+      <td><canvas class="can_users"></canvas></td>
+      <td><canvas class="can_users"></canvas></td>
+   </tr>
+   <tr>
+      <td><div class="div_users"></div></td>
+      <td><div class="div_users"></div></td>
+      <td><div class="div_users"></div></td>
+      <td><div class="div_users"></div></td>
+      <td><div class="div_users"></div></td>
+      <td><div class="div_users"></div></td>
+   </tr>
+   <tr>
+      <td><canvas class="can_users"></canvas></td>
+      <td><canvas class="can_users"></canvas></td>
+      <td><canvas class="can_users"></canvas></td>
+      <td><canvas class="can_users"></canvas></td>
+      <td><canvas class="can_users"></canvas></td>
+      <td><canvas class="can_users"></canvas></td>
+   </tr>
+   <tr>
+      <td><div class="div_users"></div></td>
+      <td><div class="div_users"></div></td>
+      <td><div class="div_users"></div></td>
+      <td><div class="div_users"></div></td>
+      <td><div class="div_users"></div></td>
+      <td><div class="div_users"></div></td>
+   </tr>
+   <tr>
+      <td><canvas class="can_users"></canvas></td>
+      <td><canvas class="can_users"></canvas></td>
+      <td><canvas class="can_users"></canvas></td>
+      <td><canvas class="can_users"></canvas></td>
+      <td><canvas class="can_users"></canvas></td>
+      <td><canvas class="can_users"></canvas></td>
+   </tr>
+   <tr>
+      <td><div class="div_users"></div></td>
+      <td><div class="div_users"></div></td>
+      <td><div class="div_users"></div></td>
+      <td><div class="div_users"></div></td>
+      <td><div class="div_users"></div></td>
+      <td><div class="div_users"></div></td>
+   </tr>
+   <tr>
+      <td><canvas class="can_users"></canvas></td>
+      <td><canvas class="can_users"></canvas></td>
+      <td><canvas class="can_users"></canvas></td>
+      <td><canvas class="can_users"></canvas></td>
+      <td><canvas class="can_users"></canvas></td>
+      <td><canvas class="can_users"></canvas></td>
+   </tr>
+   
+
+
+</table>
+   
+   
+   </td>
+</tr>
+</table>
+
+
+</body>
+</html>
+
